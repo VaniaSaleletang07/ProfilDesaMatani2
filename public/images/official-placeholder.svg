@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" role="img" aria-labelledby="title">
+  <title id="title">Placeholder foto kepala wilayah</title>
+  <path fill="#FEE2E2" d="M0 0h600v750H0z"/>
+  <circle cx="300" cy="240" r="120" fill="#B91C1C" opacity=".55"/>
+  <path d="M100 680c10-180 85-280 200-280s190 100 200 280" fill="#7F1D1D" opacity=".7"/>
+  <text x="300" y="720" fill="#7F1D1D" font-family="Arial,sans-serif" font-size="24" font-weight="700" text-anchor="middle">FOTO KEPALA WILAYAH</text>
+</svg>

@@ -1,0 +1,31 @@
+export const businessSource = {
+  title: 'Daftar Potensi Pendapatan Daerah',
+  period: 'September 2026',
+  note: 'Data berikut bersumber dari dokumen daftar potensi pendapatan daerah Kelurahan Matani Dua.',
+}
+
+export const initialBusinesses = [
+  { category: 'Hotel/Penginapan', name: 'AAB GUEST HOUSE', owner: 'CHRISTOFEL WAKAS', address: 'MATANI DUA LINGKUNGAN X', phone: '085256250495', info: '20 KAMAR', notes: 'BEROPERASI' },
+  { category: 'Hotel/Penginapan', name: 'TMT KOST', owner: 'ROETH NAJOAN', address: 'MATANI DUA LINGKUNGAN X', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: 'TMT KOST 2', owner: 'ROETH NAJOAN', address: 'MATANI DUA LINGKUNGAN VII', phone: '', info: '16 KAMAR', notes: '' },
+  { category: 'Hotel/Penginapan', name: 'KOST KUNING', owner: 'BENNY KAPOJOS', address: 'MATANI DUA LINGKUNGAN IV', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: '', owner: 'DORCE ANES', address: 'MATANI DUA LINGKUNGAN IV', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: '', owner: 'KAREL KALENGKONGAN', address: 'MATANI DUA LINGKUNGAN VIII', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: 'RAKEL RENATA', owner: 'IMECI SH. MKN', address: 'MATANI DUA LINGKUNGAN VIII', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: '', owner: 'HAERANI MANA NEKE', address: 'MATANI DUA LINGKUNGAN VIII', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: 'KOST TENI', owner: 'MARTHEN KAWOHAN', address: 'MATANI DUA LINGKUNGAN VIII', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: 'KOST TRIPLE J', owner: 'MONINGKA PUSUNG', address: 'MATANI DUA LINGKUNGAN VIII', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: 'KOST LINDA', owner: 'LANTANG PONDAAG', address: 'MATANI DUA LINGKUNGAN VIII', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: '', owner: 'PANDEY PALENDENG', address: 'MATANI DUA LINGKUNGAN VIII', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: '', owner: 'JOSEPH LONTOH', address: 'MATANI DUA LINGKUNGAN IX', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: '', owner: 'KEL. TILAAR SIWI', address: 'MATANI DUA LINGKUNGAN IX', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: '', owner: 'KEL. DEMAR WALANDA', address: 'MATANI DUA LINGKUNGAN IX', phone: '', info: '', notes: '' },
+  { category: 'Hotel/Penginapan', name: '', owner: 'SYENI LASUT', address: 'MATANI DUA LINGKUNGAN IX', phone: '', info: '', notes: '' },
+  { category: 'Restoran dan Sejenisnya', name: 'D’BESTO', owner: 'SAEPUL BAHRI', address: 'MATANI DUA LINGKUNGAN VI', phone: '085196050385', info: '', notes: '' },
+  { category: 'Restoran dan Sejenisnya', name: 'REVAMP CAFE TOMOHON', owner: 'MERRY WATULANGKOW', address: 'MATANI DUA LINGKUNGAN VI', phone: '082196074874', info: '', notes: '' },
+  { category: 'Laundry / SPPG', name: 'SMART LAUNDRY EXPRESS', owner: 'FALENTINO TURAMBI', address: 'MATANI DUA LINGKUNGAN IX', phone: '085167661912', info: '', notes: '' },
+  { category: 'Laundry / SPPG', name: 'LAUNDRY HIJAU', owner: 'AUDY RAPAR', address: 'MATANI DUA LINGKUNGAN X', phone: '085256966119', info: '', notes: '' },
+  { category: 'Laundry / SPPG', name: 'SPPG MATANI DUA', owner: 'SANDRA SOLANG', address: 'MATANI DUA LINGKUNGAN VII', phone: '', info: '', notes: '' },
+  { category: 'Tempat Wisata / Rekreasi', name: 'CARTENZ HILLS TOMOHON', owner: 'CARTENS MONTOLALU', address: 'MATANI DUA LINGKUNGAN X', phone: '085232181970', info: '', notes: '' },
+  { category: 'Klinik', name: 'KRETIA CLINIC BERSALIN', owner: 'SEYLA KRESENTTIA MANGOWAL', address: 'MATANI DUA LINGKUNGAN X', phone: '', info: '', notes: 'TEMPAT USAHA' },
+]

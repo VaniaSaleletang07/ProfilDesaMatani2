@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title">
+  <title id="title">Placeholder gambar utama wilayah</title>
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7F1D1D"/><stop offset="1" stop-color="#DC2626"/></linearGradient></defs>
+  <path fill="url(#g)" d="M0 0h1600v900H0z"/>
+  <circle cx="1280" cy="190" r="120" fill="#FEE2E2" opacity=".2"/>
+  <path d="m0 670 250-230 180 150 220-290 250 300 190-190 220 230 170-160 120 100v320H0Z" fill="#450A0A" opacity=".5"/>
+  <text x="800" y="790" fill="#fff" opacity=".72" font-family="Arial,sans-serif" font-size="34" text-anchor="middle">PLACEHOLDER FOTO WILAYAH</text>
+</svg>

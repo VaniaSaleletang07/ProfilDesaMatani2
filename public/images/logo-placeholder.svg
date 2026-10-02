@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Placeholder logo Kelurahan Matani 2</title>
+  <circle cx="64" cy="64" r="60" fill="#fff" stroke="#7F1D1D" stroke-width="6"/>
+  <path d="M32 75 64 35l32 40v22H32Z" fill="#FEE2E2" stroke="#B91C1C" stroke-width="5"/>
+  <path d="M49 97V70h30v27" fill="#fff" stroke="#B91C1C" stroke-width="5"/>
+  <text x="64" y="119" fill="#7F1D1D" font-family="Arial,sans-serif" font-size="12" font-weight="700" text-anchor="middle">MATANI 2</text>
+</svg>
