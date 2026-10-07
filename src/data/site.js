@@ -10,12 +10,10 @@ export const siteInfo = {
 export const navigation = [
   { label: 'Beranda', path: '/' },
   { label: 'Profil', path: '/profil' },
-  { label: 'Pemerintahan', path: '/pemerintahan' },
-  { label: 'Data Penduduk', path: '/data-penduduk' },
   { label: 'Potensi', path: '/potensi' },
-  { label: 'Wisata & Budaya', path: '/wisata-budaya' },
   { label: 'Fasilitas', path: '/fasilitas' },
   { label: 'Galeri', path: '/galeri' },
+  { label: 'Tim KKT', path: '/tim-kkt' },
   { label: 'Kontak', path: '/kontak' },
 ]
 

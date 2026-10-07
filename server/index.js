@@ -71,7 +71,7 @@ app.get('/api/auth/session', adminOnly, (req, res) => {
   res.json({ user })
 })
 
-const allowedSections = new Set(['village', 'headOfficial', 'statistics'])
+const allowedSections = new Set(['village', 'headOfficial', 'organization', 'neighborhoods', 'statistics'])
 app.put('/api/admin/sections/:section', adminOnly, (req, res) => {
   const { section } = req.params
   if (!allowedSections.has(section)) return res.status(400).json({ message: 'Bagian data tidak valid.' })

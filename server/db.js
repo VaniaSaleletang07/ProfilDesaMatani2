@@ -4,11 +4,12 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { village } from '../src/data/desa.js'
-import { headOfficial } from '../src/data/pemerintahan.js'
+import { headOfficial, organization } from '../src/data/pemerintahan.js'
 import { statistics } from '../src/data/statistik.js'
 import { featuredPotentials } from '../src/data/potensi.js'
 import { galleryPreview } from '../src/data/galeri.js'
 import { initialBusinesses } from '../src/data/umkm.js'
+import { neighborhoods } from '../src/data/lingkungan.js'
 
 const serverDir = path.dirname(fileURLToPath(import.meta.url))
 const dataDir = path.join(serverDir, 'data')
@@ -63,6 +64,15 @@ db.exec(`
 const insertSection = db.prepare('INSERT OR IGNORE INTO sections (key, value) VALUES (?, ?)')
 insertSection.run('village', JSON.stringify(village))
 insertSection.run('headOfficial', JSON.stringify(headOfficial))
+insertSection.run('organization', JSON.stringify(organization))
+insertSection.run('neighborhoods', JSON.stringify(neighborhoods))
+
+const storedNeighborhoods = db.prepare('SELECT value FROM sections WHERE key = ?').get('neighborhoods')
+if (storedNeighborhoods) {
+  const currentNeighborhoods = JSON.parse(storedNeighborhoods.value)
+  const hasNoContacts = Array.isArray(currentNeighborhoods) && currentNeighborhoods.every((item) => !item.headName && !item.deputyName && !item.headPhone && !item.deputyPhone)
+  if (hasNoContacts) db.prepare('UPDATE sections SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE key = ?').run(JSON.stringify(neighborhoods), 'neighborhoods')
+}
 insertSection.run('statistics', JSON.stringify(statistics))
 
 const itemCount = db.prepare('SELECT COUNT(*) AS total FROM items').get().total

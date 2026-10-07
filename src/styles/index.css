@@ -4,7 +4,7 @@
 
 @layer base {
   html { scroll-behavior: smooth; }
-  body { @apply m-0 bg-[#f7f3f3] font-body text-ink antialiased; }
+  body { @apply m-0 bg-[#f5f7f6] font-body text-ink antialiased; }
   h1, h2, h3, h4 { @apply font-heading tracking-tight; }
   a, button, input, textarea { @apply focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary-light; }
   ::selection { @apply bg-primary text-white; }
@@ -19,7 +19,13 @@
   .section-panel { @apply rounded-3xl border border-white/80 bg-white shadow-soft; }
 }
 
-.leaflet-container { font-family: Inter, sans-serif; }
+.leaflet-container {
+  position: relative;
+  z-index: 0 !important;
+  isolation: isolate;
+  overflow: hidden;
+  font-family: Inter, sans-serif;
+}
 .leaflet-control-layers {
   border: 0 !important;
   border-radius: 10px !important;
@@ -27,3 +33,11 @@
 }
 .leaflet-control-layers-expanded { padding: 10px 12px !important; }
 .leaflet-popup-content-wrapper { border-radius: 12px !important; }
+
+@media (min-width: 768px) {
+  header.sticky > div:first-of-type > div > p:first-child { font-size: 0; }
+  header.sticky > div:first-of-type > div > p:first-child::before {
+    content: 'Mengikuti jam kerja pemerintah daerah';
+    font-size: 10px;
+  }
+}

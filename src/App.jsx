@@ -7,6 +7,8 @@ import AdminLoginPage from './pages/admin/AdminLoginPage'
 import AdminDashboardPage from './pages/admin/AdminDashboardPage'
 import ProtectedAdminRoute from './components/admin/ProtectedAdminRoute'
 import PotensiPage from './pages/PotensiPage'
+import ProfilePage from './pages/ProfilePage'
+import KktTeamPage from './pages/KktTeamPage'
 import { pageRoutes } from './data/site'
 import { adminEntryPath, adminPanelPath } from './lib/api'
 
@@ -19,8 +21,10 @@ export default function App() {
       </Route>
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
+        <Route path="/profil" element={<ProfilePage />} />
+        <Route path="/tim-kkt" element={<KktTeamPage />} />
         <Route path="/potensi" element={<PotensiPage />} />
-        {pageRoutes.filter((page) => page.path !== '/potensi').map((page) => (
+        {pageRoutes.filter((page) => !['/potensi', '/profil', '/tim-kkt'].includes(page.path)).map((page) => (
           <Route key={page.path} path={page.path} element={<PlaceholderPage page={page} />} />
         ))}
         <Route path="*" element={<NotFoundPage />} />

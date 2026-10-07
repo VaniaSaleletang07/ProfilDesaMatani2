@@ -1,6 +1,6 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useRef } from 'react'
-import { navigation, siteInfo } from '../../data/site'
+import { siteInfo } from '../../data/site'
 import { useContent } from '../../context/ContentContext'
 import { adminEntryPath } from '../../lib/api'
 
@@ -25,7 +25,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#4c1111] text-white">
       <div className="h-1 bg-primary" />
-      <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr] lg:gap-16">
+      <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
         <div>
           <div className="flex items-center gap-3">
             <img src={siteInfo.logo} alt="" className="h-12 w-12 rounded-full bg-white p-1" />
@@ -38,13 +38,6 @@ export default function Footer() {
           <div className="mt-5 h-0.5 w-8 bg-red-400" />
           <p className="mt-4 text-sm leading-7 text-red-100/80">{village.address}</p>
           <p className="mt-2 text-sm text-red-100/80">{village.phone}</p>
-        </div>
-        <div>
-          <h2 className="text-sm font-bold uppercase tracking-[0.16em] text-white">Tautan Cepat</h2>
-          <div className="mt-5 h-0.5 w-8 bg-red-400" />
-          <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-            {navigation.map((item) => <li key={item.path}><Link className="text-red-100/80 transition hover:text-white" to={item.path}><span className="mr-1.5 text-red-400" aria-hidden="true">&#8250;</span>{item.label}</Link></li>)}
-          </ul>
         </div>
       </div>
       <div className="relative border-t border-white/10 bg-black/10 py-5 text-center text-xs text-red-100/70">

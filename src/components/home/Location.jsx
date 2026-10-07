@@ -15,23 +15,24 @@ export default function Location() {
       <div className="container-page section-panel p-6 sm:p-10 lg:p-14">
         <SectionHeading eyebrow="Temukan Kami" title="Lokasi Kelurahan" />
         <div className="grid overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-card lg:grid-cols-[1.55fr_1fr]">
-          <div className="min-h-[380px] bg-gray-200">
-            <MapContainer center={[1.302, 124.851]} zoom={14} scrollWheelZoom={false} className="h-full min-h-[380px] w-full" aria-label="Peta batas wilayah Kelurahan Matani Dua">
+          <div className="relative z-0 min-h-[380px] overflow-hidden bg-gray-200">
+            <MapContainer center={[1.302, 124.851]} zoom={14} minZoom={12} maxZoom={19} scrollWheelZoom className="relative z-0 h-full min-h-[380px] w-full" aria-label="Peta batas wilayah Kelurahan Matani Dua">
               <LayersControl position="topright">
                 <LayersControl.BaseLayer checked name="Satelit">
                   <LayerGroup>
                     <TileLayer attribution='Tiles &copy; Esri — Sources: Esri, Maxar, Earthstar Geographics, and the GIS User Community' url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
-                    <TileLayer attribution="Esri reference labels" url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}" />
+                    <TileLayer maxZoom={19} attribution="Esri reference labels" url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}" />
                   </LayerGroup>
                 </LayersControl.BaseLayer>
                 <LayersControl.BaseLayer name="Peta Jalan">
-                  <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  <TileLayer maxZoom={19} attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 </LayersControl.BaseLayer>
               </LayersControl>
               <GeoJSON data={mataniDuaBoundary} interactive={false} style={{ color: '#FFFFFF', weight: 8, opacity: 0.9, fillOpacity: 0 }} />
               <GeoJSON data={mataniDuaBoundary} style={{ color: '#EF4444', weight: 4, opacity: 1, fillColor: '#B91C1C', fillOpacity: 0.2, dashArray: '8 7' }} onEachFeature={(_feature, layer) => layer.bindPopup('<strong>Kelurahan Matani Dua</strong><br>Batas wilayah indikatif')} />
               <FitBoundary />
             </MapContainer>
+            <p className="pointer-events-none absolute bottom-7 left-3 z-[500] rounded bg-white/90 px-2 py-1 text-[11px] font-medium text-gray-600 shadow-sm">Gunakan +/−, roda mouse, atau cubit layar untuk memperbesar</p>
           </div>
           <div className="relative flex flex-col justify-center overflow-hidden bg-primary-dark p-8 text-white md:p-10 lg:p-12">
             <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full border-[28px] border-white/5" />

@@ -1,15 +1,15 @@
 export const territoryData = {
   demographicsPendingVerification: {
-    male: 1152,
-    female: 1587,
-    reportedTotal: 3139,
-    calculatedTotal: 2739,
+    male: 1527,
+    female: 1820,
+    reportedTotal: 3347,
+    calculatedTotal: 3347,
   },
   boundaries: [
     { direction: 'Utara', neighbor: 'Kelurahan Paslaten Dua' },
-    { direction: 'Selatan', neighbor: 'Kelurahan Walian dan Kelurahan Matani Tiga' },
+    { direction: 'Selatan', neighbor: 'Kelurahan Walian dan Matani Tiga' },
     { direction: 'Barat', neighbor: 'Kelurahan Matani Tiga' },
-    { direction: 'Timur', neighbor: 'Kelurahan Paslaten Dua dan Kelurahan Paslaten Satu' },
+    { direction: 'Timur', neighbor: 'Kelurahan Paslaten Dua dan Satu' },
   ],
   googleMapsUrl: 'https://www.google.com/maps/search/?api=1&query=1.3189788,124.8427179',
   boundarySource: 'GADM 4.1 — IDN.29.15.3.5_1',

@@ -10,7 +10,7 @@ const icons = {
 export default function Statistics() {
   const { content: { statistics } } = useContent()
   return (
-    <section aria-label="Ringkasan statistik" className="relative z-10 -mt-16 bg-transparent pb-5 md:-mt-14">
+    <section aria-label="Ringkasan statistik" className="bg-[#f7f3f3] py-8 md:py-10">
       <div className="container-page grid sm:grid-cols-2 lg:grid-cols-4">
         {statistics.map((item) => (
           <article key={item.label} className="flex items-center gap-4 border-b border-gray-100 bg-white p-5 first:rounded-t-2xl last:rounded-b-2xl sm:[&:nth-child(1)]:rounded-tl-2xl sm:[&:nth-child(2)]:rounded-tr-2xl lg:border-b-0 lg:border-r lg:first:rounded-l-2xl lg:first:rounded-tr-none lg:last:rounded-r-2xl lg:last:border-r-0 lg:last:rounded-bl-none lg:[&:nth-child(2)]:rounded-none shadow-soft transition hover:bg-red-50/60 md:p-6">

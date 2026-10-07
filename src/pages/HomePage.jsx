@@ -1,8 +1,7 @@
 import Hero from '../components/home/Hero'
-import Statistics from '../components/home/Statistics'
 import Welcome from '../components/home/Welcome'
-import ProfileSummary from '../components/home/ProfileSummary'
 import Potentials from '../components/home/Potentials'
+import FacilitiesPreview from '../components/home/FacilitiesPreview'
 import GalleryPreview from '../components/home/GalleryPreview'
 import Location from '../components/home/Location'
 import TerritoryBoundaries from '../components/home/TerritoryBoundaries'
@@ -15,11 +14,10 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <Statistics />
       <Welcome />
-      <ProfileSummary />
       <TerritoryBoundaries />
       <Potentials />
+      <FacilitiesPreview />
       <GalleryPreview />
       <Location />
     </>
