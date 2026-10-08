@@ -13,11 +13,8 @@
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-router-dom": "6.28.0",
+    "@supabase/supabase-js": "^2.49.1",
     "bcryptjs": "2.4.3",
-    "better-sqlite3": "11.7.0",
     "cookie-parser": "1.4.7",
     "dotenv": "16.4.7",
     "express": "4.21.2",
@@ -26,7 +23,10 @@
     "jsonwebtoken": "9.0.2",
     "leaflet": "1.9.4",
     "multer": "2.0.2",
-    "react-leaflet": "4.2.1"
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-leaflet": "4.2.1",
+    "react-router-dom": "6.28.0"
   },
   "devDependencies": {
     "@eslint/js": "9.15.0",

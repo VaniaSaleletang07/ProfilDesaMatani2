@@ -10,7 +10,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { clearSession, createSession, requireAdmin } from './auth.js'
-import { db, ensureAdmin, getPublicContent } from './db.js'
+import { ensureAdmin, getPublicContent, initializeDatabase, supabase } from './db.js'
 
 const port = Number(process.env.PORT || 4174)
 const jwtSecret = process.env.JWT_SECRET
@@ -22,9 +22,16 @@ if (!jwtSecret || jwtSecret.length < 32 || !adminUsername || !adminPassword || a
   process.exit(1)
 }
 
-ensureAdmin(adminUsername, adminPassword)
+try {
+  await initializeDatabase()
+  await ensureAdmin(adminUsername, adminPassword)
+} catch (error) {
+  console.error('Koneksi atau inisialisasi Supabase gagal:', error.message)
+  process.exit(1)
+}
 
 const app = express()
+const asyncRoute = (handler) => (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next)
 const serverDir = path.dirname(fileURLToPath(import.meta.url))
 const rootDir = path.resolve(serverDir, '..')
 const uploadsDir = path.join(rootDir, 'public', 'uploads')
@@ -45,12 +52,13 @@ const loginLimiter = rateLimit({
 })
 const adminOnly = requireAdmin(jwtSecret)
 
-app.get('/api/public/content', (_req, res) => res.json(getPublicContent()))
+app.get('/api/public/content', asyncRoute(async (_req, res) => res.json(await getPublicContent())))
 
-app.post('/api/auth/login', loginLimiter, (req, res) => {
+app.post('/api/auth/login', loginLimiter, asyncRoute(async (req, res) => {
   const username = String(req.body?.username || '').trim()
   const password = String(req.body?.password || '')
-  const user = db.prepare('SELECT id, username, password_hash, role FROM users WHERE username = ?').get(username)
+  const { data: user, error } = await supabase.from('users').select('id, username, password_hash, role').eq('username', username).maybeSingle()
+  if (error) throw error
 
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
     return res.status(401).json({ message: 'Username atau password salah.' })
@@ -58,21 +66,22 @@ app.post('/api/auth/login', loginLimiter, (req, res) => {
 
   createSession(res, user, jwtSecret)
   res.json({ user: { username: user.username, role: user.role } })
-})
+}))
 
 app.post('/api/auth/logout', (_req, res) => {
   clearSession(res)
   res.status(204).end()
 })
 
-app.get('/api/auth/session', adminOnly, (req, res) => {
-  const user = db.prepare('SELECT username, role FROM users WHERE id = ?').get(req.admin.sub)
+app.get('/api/auth/session', adminOnly, asyncRoute(async (req, res) => {
+  const { data: user, error } = await supabase.from('users').select('username, role').eq('id', req.admin.sub).maybeSingle()
+  if (error) throw error
   if (!user) return res.status(401).json({ message: 'Akun tidak ditemukan.' })
   res.json({ user })
-})
+}))
 
 const allowedSections = new Set(['village', 'headOfficial', 'organization', 'neighborhoods', 'statistics'])
-app.put('/api/admin/sections/:section', adminOnly, (req, res) => {
+app.put('/api/admin/sections/:section', adminOnly, asyncRoute(async (req, res) => {
   const { section } = req.params
   if (!allowedSections.has(section)) return res.status(400).json({ message: 'Bagian data tidak valid.' })
   if (req.body?.value === undefined) return res.status(400).json({ message: 'Data tidak boleh kosong.' })
@@ -85,10 +94,10 @@ app.put('/api/admin/sections/:section', adminOnly, (req, res) => {
     }
   }
 
-  db.prepare(`UPDATE sections SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE key = ?`)
-    .run(JSON.stringify(req.body.value), section)
-  res.json({ message: 'Perubahan berhasil disimpan.', content: getPublicContent() })
-})
+  const { error } = await supabase.from('sections').upsert({ key: section, value: req.body.value, updated_at: new Date().toISOString() }, { onConflict: 'key' })
+  if (error) throw error
+  res.json({ message: 'Perubahan berhasil disimpan.', content: await getPublicContent() })
+}))
 
 const allowedTypes = new Set(['potentials', 'galleries'])
 function cleanItem(body) {
@@ -101,36 +110,37 @@ function cleanItem(body) {
   }
 }
 
-app.post('/api/admin/items/:type', adminOnly, (req, res) => {
+app.post('/api/admin/items/:type', adminOnly, asyncRoute(async (req, res) => {
   const { type } = req.params
   if (!allowedTypes.has(type)) return res.status(400).json({ message: 'Jenis data tidak valid.' })
   const item = cleanItem(req.body || {})
   if (!item.title) return res.status(400).json({ message: 'Judul wajib diisi.' })
 
-  const result = db.prepare(`INSERT INTO items (type, title, description, image, alt, sort_order) VALUES (?, ?, ?, ?, ?, ?)`)
-    .run(type, item.title, item.description, item.image, item.alt, item.sort_order)
-  res.status(201).json({ id: result.lastInsertRowid, message: 'Data berhasil ditambahkan.', content: getPublicContent() })
-})
+  const { data, error } = await supabase.from('items').insert({ type, ...item }).select('id').single()
+  if (error) throw error
+  res.status(201).json({ id: data.id, message: 'Data berhasil ditambahkan.', content: await getPublicContent() })
+}))
 
-app.put('/api/admin/items/:type/:id', adminOnly, (req, res) => {
+app.put('/api/admin/items/:type/:id', adminOnly, asyncRoute(async (req, res) => {
   const { type, id } = req.params
   if (!allowedTypes.has(type)) return res.status(400).json({ message: 'Jenis data tidak valid.' })
   const item = cleanItem(req.body || {})
   if (!item.title) return res.status(400).json({ message: 'Judul wajib diisi.' })
 
-  const result = db.prepare(`UPDATE items SET title = ?, description = ?, image = ?, alt = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND type = ?`)
-    .run(item.title, item.description, item.image, item.alt, item.sort_order, Number(id), type)
-  if (!result.changes) return res.status(404).json({ message: 'Data tidak ditemukan.' })
-  res.json({ message: 'Data berhasil diperbarui.', content: getPublicContent() })
-})
+  const { data, error } = await supabase.from('items').update({ ...item, updated_at: new Date().toISOString() }).eq('id', Number(id)).eq('type', type).select('id')
+  if (error) throw error
+  if (!data?.length) return res.status(404).json({ message: 'Data tidak ditemukan.' })
+  res.json({ message: 'Data berhasil diperbarui.', content: await getPublicContent() })
+}))
 
-app.delete('/api/admin/items/:type/:id', adminOnly, (req, res) => {
+app.delete('/api/admin/items/:type/:id', adminOnly, asyncRoute(async (req, res) => {
   const { type, id } = req.params
   if (!allowedTypes.has(type)) return res.status(400).json({ message: 'Jenis data tidak valid.' })
-  const result = db.prepare('DELETE FROM items WHERE id = ? AND type = ?').run(Number(id), type)
-  if (!result.changes) return res.status(404).json({ message: 'Data tidak ditemukan.' })
-  res.json({ message: 'Data berhasil dihapus.', content: getPublicContent() })
-})
+  const { data, error } = await supabase.from('items').delete().eq('id', Number(id)).eq('type', type).select('id')
+  if (error) throw error
+  if (!data?.length) return res.status(404).json({ message: 'Data tidak ditemukan.' })
+  res.json({ message: 'Data berhasil dihapus.', content: await getPublicContent() })
+}))
 
 function cleanBusiness(body) {
   return {
@@ -145,36 +155,33 @@ function cleanBusiness(body) {
   }
 }
 
-app.post('/api/admin/businesses', adminOnly, (req, res) => {
+app.post('/api/admin/businesses', adminOnly, asyncRoute(async (req, res) => {
   const business = cleanBusiness(req.body || {})
   if (!business.category || (!business.name && !business.owner)) {
     return res.status(400).json({ message: 'Kategori serta nama usaha atau pemilik wajib diisi.' })
   }
-  const result = db.prepare(`
-    INSERT INTO businesses (category, name, owner, address, phone, info, notes, sort_order)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(business.category, business.name, business.owner, business.address, business.phone, business.info, business.notes, business.sort_order)
-  res.status(201).json({ id: result.lastInsertRowid, message: 'Data usaha berhasil ditambahkan.', content: getPublicContent() })
-})
+  const { data, error } = await supabase.from('businesses').insert(business).select('id').single()
+  if (error) throw error
+  res.status(201).json({ id: data.id, message: 'Data usaha berhasil ditambahkan.', content: await getPublicContent() })
+}))
 
-app.put('/api/admin/businesses/:id', adminOnly, (req, res) => {
+app.put('/api/admin/businesses/:id', adminOnly, asyncRoute(async (req, res) => {
   const business = cleanBusiness(req.body || {})
   if (!business.category || (!business.name && !business.owner)) {
     return res.status(400).json({ message: 'Kategori serta nama usaha atau pemilik wajib diisi.' })
   }
-  const result = db.prepare(`
-    UPDATE businesses SET category = ?, name = ?, owner = ?, address = ?, phone = ?, info = ?, notes = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
-    WHERE id = ?
-  `).run(business.category, business.name, business.owner, business.address, business.phone, business.info, business.notes, business.sort_order, Number(req.params.id))
-  if (!result.changes) return res.status(404).json({ message: 'Data usaha tidak ditemukan.' })
-  res.json({ message: 'Data usaha berhasil diperbarui.', content: getPublicContent() })
-})
+  const { data, error } = await supabase.from('businesses').update({ ...business, updated_at: new Date().toISOString() }).eq('id', Number(req.params.id)).select('id')
+  if (error) throw error
+  if (!data?.length) return res.status(404).json({ message: 'Data usaha tidak ditemukan.' })
+  res.json({ message: 'Data usaha berhasil diperbarui.', content: await getPublicContent() })
+}))
 
-app.delete('/api/admin/businesses/:id', adminOnly, (req, res) => {
-  const result = db.prepare('DELETE FROM businesses WHERE id = ?').run(Number(req.params.id))
-  if (!result.changes) return res.status(404).json({ message: 'Data usaha tidak ditemukan.' })
-  res.json({ message: 'Data usaha berhasil dihapus.', content: getPublicContent() })
-})
+app.delete('/api/admin/businesses/:id', adminOnly, asyncRoute(async (req, res) => {
+  const { data, error } = await supabase.from('businesses').delete().eq('id', Number(req.params.id)).select('id')
+  if (error) throw error
+  if (!data?.length) return res.status(404).json({ message: 'Data usaha tidak ditemukan.' })
+  res.json({ message: 'Data usaha berhasil dihapus.', content: await getPublicContent() })
+}))
 
 const allowedMimeTypes = new Map([
   ['image/jpeg', '.jpg'], ['image/png', '.png'], ['image/webp', '.webp'], ['image/gif', '.gif'],
